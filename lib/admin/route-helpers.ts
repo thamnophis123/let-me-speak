@@ -27,6 +27,16 @@ export function routeErrorResponse(error: unknown) {
     return NextResponse.json({ error: message }, { status: 404 });
   }
 
+  if (
+    /duplicate key|already exists/i.test(message) ||
+    (error && typeof error === "object" && "code" in error && error.code === "23505")
+  ) {
+    return NextResponse.json(
+      { error: "That slug is already in use. Choose another." },
+      { status: 409 },
+    );
+  }
+
   return NextResponse.json(
     { error: "Could not complete that admin request." },
     { status: 500 },

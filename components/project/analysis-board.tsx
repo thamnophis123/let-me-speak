@@ -64,7 +64,12 @@ function ArgumentColumn({
         <p className="mt-1 text-sm leading-5 text-muted-foreground">{description}</p>
       </header>
       <div className="flex flex-1 flex-col gap-3 p-3">
-        {items.map((item) => (
+        {items.length === 0 ? (
+          <p className="px-1 py-6 text-sm leading-6 text-muted-foreground">
+            None yet.
+          </p>
+        ) : (
+          items.map((item) => (
           <Card key={item.id} size="sm" className="bg-background shadow-none">
             <CardHeader>
               <div className="flex flex-wrap items-center gap-2">
@@ -81,7 +86,8 @@ function ArgumentColumn({
               <CardDescription className="leading-6">{item.note}</CardDescription>
             </CardContent>
           </Card>
-        ))}
+          ))
+        )}
       </div>
     </section>
   );
@@ -127,7 +133,12 @@ export function AnalysisBoard({ project }: { project: ProjectAnalysis }) {
             description="What the record currently supports, and how each item is classified."
           />
           <div className="grid gap-4 md:grid-cols-2">
-            {project.evidence.map((item) => (
+            {project.evidence.length === 0 ? (
+              <div className="rounded-xl border border-dashed px-6 py-12 text-sm leading-6 text-muted-foreground md:col-span-2">
+                No evidence has been posted yet.
+              </div>
+            ) : (
+              project.evidence.map((item) => (
               <Card key={item.id}>
                 <CardHeader>
                   <EvidenceStatusBadge status={item.status} />
@@ -140,7 +151,8 @@ export function AnalysisBoard({ project }: { project: ProjectAnalysis }) {
                   <p className="leading-6 text-muted-foreground">{item.summary}</p>
                 </CardContent>
               </Card>
-            ))}
+              ))
+            )}
           </div>
         </section>
 
@@ -238,18 +250,24 @@ export function AnalysisBoard({ project }: { project: ProjectAnalysis }) {
 
         <section className="space-y-6 pb-6">
           <SectionHeading kicker="06 · Record" title="Version history" />
-          <ol className="divide-y rounded-xl bg-background ring-1 ring-foreground/10">
-            {project.versions.map((entry) => (
-              <li
-                key={entry.version}
-                className="grid gap-1 px-4 py-4 sm:grid-cols-[7rem_8rem_1fr] sm:items-baseline sm:gap-6"
-              >
-                <span className="font-medium">{entry.version}</span>
-                <span className="text-sm text-muted-foreground">{entry.date}</span>
-                <p className="text-sm leading-6 text-muted-foreground">{entry.summary}</p>
-              </li>
-            ))}
-          </ol>
+          {project.versions.length === 0 ? (
+            <div className="rounded-xl border border-dashed px-6 py-12 text-sm leading-6 text-muted-foreground">
+              No analysis versions yet.
+            </div>
+          ) : (
+            <ol className="divide-y rounded-xl bg-background ring-1 ring-foreground/10">
+              {project.versions.map((entry) => (
+                <li
+                  key={entry.version}
+                  className="grid gap-1 px-4 py-4 sm:grid-cols-[7rem_8rem_1fr] sm:items-baseline sm:gap-6"
+                >
+                  <span className="font-medium">{entry.version}</span>
+                  <span className="text-sm text-muted-foreground">{entry.date}</span>
+                  <p className="text-sm leading-6 text-muted-foreground">{entry.summary}</p>
+                </li>
+              ))}
+            </ol>
+          )}
         </section>
       </main>
     </div>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -96,7 +96,13 @@ function ProjectGrid({
   );
 }
 
-export function ProjectDashboard({ projects }: { projects: ProjectListItem[] }) {
+export function ProjectDashboard({
+  projects,
+  isAdmin = false,
+}: {
+  projects: ProjectListItem[];
+  isAdmin?: boolean;
+}) {
   const counts = projectCounts(projects);
   const active = projects.filter((project) => project.stage === "Active");
   const completed = projects.filter((project) => project.stage === "Completed");
@@ -114,15 +120,22 @@ export function ProjectDashboard({ projects }: { projects: ProjectListItem[] }) 
       </header>
 
       <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-10 px-4 py-10 sm:px-6 lg:py-14">
-        <section className="max-w-3xl space-y-3">
-          <h1 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-            Public Decision Analysis
-          </h1>
-          <p className="text-base leading-7 text-muted-foreground sm:text-lg">
-            Independent boards for public decisions: evidence, arguments, and a
-            preliminary recommendation written so a resident can understand the
-            live dispute in a few minutes.
-          </p>
+        <section className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div className="max-w-3xl space-y-3">
+            <h1 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
+              Public Decision Analysis
+            </h1>
+            <p className="text-base leading-7 text-muted-foreground sm:text-lg">
+              Independent boards for public decisions: evidence, arguments, and a
+              preliminary recommendation written so a resident can understand the
+              live dispute in a few minutes.
+            </p>
+          </div>
+          {isAdmin ? (
+            <Button asChild className="shrink-0 self-start sm:self-end">
+              <Link href="/admin/projects/new">Create New Project</Link>
+            </Button>
+          ) : null}
         </section>
 
         <section className="grid gap-4 sm:grid-cols-3">
