@@ -10,6 +10,8 @@ import {
 import { Separator } from "@/components/ui/separator";
 import type { ArgumentItem, ProjectAnalysis } from "@/lib/projects/types";
 
+import { AdminAnalysisPanel } from "./admin-analysis-panel";
+import { AnalysisInstructions } from "./analysis-instructions";
 import { StakeholderForm } from "./stakeholder-form";
 import {
   ArgumentStrengthBadge,
@@ -65,7 +67,14 @@ function ArgumentColumn({
         {items.map((item) => (
           <Card key={item.id} size="sm" className="bg-background shadow-none">
             <CardHeader>
-              <ArgumentStrengthBadge strength={item.strength} />
+              <div className="flex flex-wrap items-center gap-2">
+                <ArgumentStrengthBadge strength={item.strength} />
+                {/^(updated|new)\b/i.test(item.note) ? (
+                  <span className="rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-900 ring-1 ring-amber-200/80 dark:bg-amber-950/40 dark:text-amber-200 dark:ring-amber-800">
+                    {/^new\b/i.test(item.note) ? "New" : "Updated"}
+                  </span>
+                ) : null}
+              </div>
               <CardTitle className="text-[0.95rem] leading-6">{item.claim}</CardTitle>
             </CardHeader>
             <CardContent>
@@ -206,10 +215,20 @@ export function AnalysisBoard({ project }: { project: ProjectAnalysis }) {
 
         <section className="space-y-6">
           <SectionHeading
-            kicker="04 · Public input"
+            kicker="04 · Method"
+            title="Analysis instructions"
+            description="The model is told to stay inside the public record and write for a resident, not a specialist."
+          />
+          <AnalysisInstructions />
+        </section>
+
+        <section className="space-y-6">
+          <SectionHeading
+            kicker="05 · Public input"
             title="Stakeholder input"
             description="Offer a claim, a correction, or new evidence. Submissions are reviewed before anything is added to the board."
           />
+          <AdminAnalysisPanel projectId={project.uuid} />
           <Card>
             <CardContent className="pt-1">
               <StakeholderForm projectId={project.uuid} />
@@ -218,7 +237,7 @@ export function AnalysisBoard({ project }: { project: ProjectAnalysis }) {
         </section>
 
         <section className="space-y-6 pb-6">
-          <SectionHeading kicker="05 · Record" title="Version history" />
+          <SectionHeading kicker="06 · Record" title="Version history" />
           <ol className="divide-y rounded-xl bg-background ring-1 ring-foreground/10">
             {project.versions.map((entry) => (
               <li
