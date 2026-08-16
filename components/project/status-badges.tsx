@@ -4,6 +4,8 @@ import type {
   EvidenceStatus,
   ProjectStatus,
 } from "@/lib/projects/types";
+import { dashboardStage } from "@/lib/projects/list-projects";
+import { stageBadgeClass } from "@/lib/projects/status-colors";
 
 const evidenceVariant: Record<
   EvidenceStatus,
@@ -27,7 +29,11 @@ const argumentVariant: Record<
 };
 
 export function ProjectStatusBadge({ status }: { status: ProjectStatus }) {
-  return <Badge variant={status === "Open for Comment" ? "default" : "secondary"}>{status}</Badge>;
+  return (
+    <Badge variant="outline" className={stageBadgeClass[dashboardStage(status)]}>
+      {status}
+    </Badge>
+  );
 }
 
 export function EvidenceStatusBadge({ status }: { status: EvidenceStatus }) {

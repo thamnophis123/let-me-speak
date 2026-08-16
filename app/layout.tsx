@@ -14,7 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Let The People Speak",
-  description: "Let the people speak.",
+  description:
+    "Public decision analysis — evidence, arguments, and preliminary recommendations residents can understand.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
