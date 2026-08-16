@@ -13,8 +13,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { createSupabaseClient } from "@/lib/supabase";
+import type { Enums } from "@/lib/supabase/database.types";
 
-const roles = [
+const roles: Enums<"contributor_role">[] = [
   "Resident",
   "Nearby landowner",
   "Business owner",
@@ -23,7 +25,7 @@ const roles = [
   "Other",
 ];
 
-const contributionTypes = [
+const contributionTypes: Enums<"contribution_type">[] = [
   "New evidence",
   "Correction of fact",
   "Argument for",
@@ -32,11 +34,52 @@ const contributionTypes = [
   "Question / missing information",
 ];
 
-export function StakeholderForm() {
+export function StakeholderForm({ projectId }: { projectId: string }) {
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
+  const [role, setRole] = useState<Enums<"contributor_role"> | "">("");
+  const [contributionType, setContributionType] = useState<
+    Enums<"contribution_type"> | ""
+  >("");
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setError(null);
+
+    if (!role || !contributionType) {
+      setError("Choose a role and type of contribution.");
+      return;
+    }
+
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const claim = String(data.get("claim") ?? "").trim();
+    const supportingLink = String(data.get("link") ?? "").trim();
+    const explanation = String(data.get("explanation") ?? "").trim();
+
+    setPending(true);
+
+    const supabase = createSupabaseClient();
+    const { error: insertError } = await supabase.from("submissions").insert({
+      project_id: projectId,
+      role,
+      contribution_type: contributionType,
+      claim,
+      supporting_link: supportingLink || null,
+      explanation: explanation || null,
+    });
+
+    setPending(false);
+
+    if (insertError) {
+      setError("Could not save this submission. Please try again.");
+      return;
+    }
+
+    form.reset();
+    setRole("");
+    setContributionType("");
     setSubmitted(true);
   }
 
@@ -60,14 +103,20 @@ export function StakeholderForm() {
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="grid gap-2">
           <Label htmlFor="role">Role</Label>
-          <Select name="role" required>
+          <Select
+            value={role}
+            onValueChange={(value) =>
+              setRole(value as Enums<"contributor_role">)
+            }
+            required
+          >
             <SelectTrigger id="role" className="w-full">
               <SelectValue placeholder="Select your role" />
             </SelectTrigger>
             <SelectContent position="popper" align="start" className="w-(--radix-select-trigger-width)">
-              {roles.map((role) => (
-                <SelectItem key={role} value={role}>
-                  {role}
+              {roles.map((item) => (
+                <SelectItem key={item} value={item}>
+                  {item}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -75,7 +124,13 @@ export function StakeholderForm() {
         </div>
         <div className="grid gap-2">
           <Label htmlFor="contribution-type">Type of contribution</Label>
-          <Select name="contributionType" required>
+          <Select
+            value={contributionType}
+            onValueChange={(value) =>
+              setContributionType(value as Enums<"contribution_type">)
+            }
+            required
+          >
             <SelectTrigger id="contribution-type" className="w-full">
               <SelectValue placeholder="Select a type" />
             </SelectTrigger>
@@ -124,8 +179,12 @@ export function StakeholderForm() {
         validity, relevance, and duplication before any change is made to the board.
       </p>
 
+      {error ? <p className="text-sm text-destructive">{error}</p> : null}
+
       <div>
-        <Button type="submit">Submit for review</Button>
+        <Button type="submit" disabled={pending}>
+          {pending ? "Submitting…" : "Submit for review"}
+        </Button>
       </div>
     </form>
   );

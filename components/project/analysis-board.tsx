@@ -212,7 +212,7 @@ export function AnalysisBoard({ project }: { project: ProjectAnalysis }) {
           />
           <Card>
             <CardContent className="pt-1">
-              <StakeholderForm />
+              <StakeholderForm projectId={project.uuid} />
             </CardContent>
           </Card>
         </section>

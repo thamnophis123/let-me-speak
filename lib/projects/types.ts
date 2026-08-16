@@ -41,6 +41,7 @@ export type VersionEntry = {
 
 export type ProjectAnalysis = {
   id: string;
+  uuid: string;
   title: string;
   jurisdiction: string;
   status: ProjectStatus;

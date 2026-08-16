@@ -1,10 +1,52 @@
-import { sampleProject, sampleProjectsById } from "./sample-project";
-import type { ProjectAnalysis } from "./types";
+import { mapProjectAnalysis } from "@/lib/projects/map-project";
+import type { ProjectAnalysis } from "@/lib/projects/types";
+import { createSupabaseClient } from "@/lib/supabase";
 
-export function getProject(id: string): ProjectAnalysis | null {
-  return sampleProjectsById[id] ?? null;
-}
+export const SAMPLE_PROJECT_SLUG = "cedar-ridge-data-center";
 
-export function getSampleProject(): ProjectAnalysis {
-  return sampleProject;
+export async function getProject(slug: string): Promise<ProjectAnalysis | null> {
+  const supabase = createSupabaseClient();
+
+  const { data: project, error: projectError } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  if (projectError) {
+    throw projectError;
+  }
+
+  if (!project) {
+    return null;
+  }
+
+  const [evidenceResult, claimsResult, versionsResult] = await Promise.all([
+    supabase
+      .from("evidence_items")
+      .select("*")
+      .eq("project_id", project.id)
+      .order("sort_order", { ascending: true }),
+    supabase
+      .from("claims")
+      .select("*")
+      .eq("project_id", project.id)
+      .order("sort_order", { ascending: true }),
+    supabase
+      .from("analysis_versions")
+      .select("*")
+      .eq("project_id", project.id)
+      .order("published_at", { ascending: true }),
+  ]);
+
+  if (evidenceResult.error) throw evidenceResult.error;
+  if (claimsResult.error) throw claimsResult.error;
+  if (versionsResult.error) throw versionsResult.error;
+
+  return mapProjectAnalysis(
+    project,
+    evidenceResult.data ?? [],
+    claimsResult.data ?? [],
+    versionsResult.data ?? [],
+  );
 }

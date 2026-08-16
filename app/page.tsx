@@ -1,11 +1,9 @@
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { getSampleProject } from "@/lib/projects/get-project";
+import { SAMPLE_PROJECT_SLUG } from "@/lib/projects/get-project";
 
 export default function Home() {
-  const project = getSampleProject();
-
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center gap-6 px-6 py-16">
       <p className="text-sm font-medium tracking-tight">Let The People Speak</p>
@@ -20,7 +18,7 @@ export default function Home() {
       </div>
       <div>
         <Button size="lg" asChild>
-          <Link href={`/project/${project.id}`}>Open sample analysis board</Link>
+          <Link href={`/project/${SAMPLE_PROJECT_SLUG}`}>Open sample analysis board</Link>
         </Button>
       </div>
     </main>
