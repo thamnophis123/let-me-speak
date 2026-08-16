@@ -5,12 +5,23 @@ import { createSupabaseClient } from "@/lib/supabase";
 export const SAMPLE_PROJECT_SLUG = "cedar-ridge-data-center";
 
 export async function getProject(slug: string): Promise<ProjectAnalysis | null> {
+  return loadProject("slug", slug);
+}
+
+export async function getProjectById(id: string): Promise<ProjectAnalysis | null> {
+  return loadProject("id", id);
+}
+
+async function loadProject(
+  column: "slug" | "id",
+  value: string,
+): Promise<ProjectAnalysis | null> {
   const supabase = createSupabaseClient();
 
   const { data: project, error: projectError } = await supabase
     .from("projects")
     .select("*")
-    .eq("slug", slug)
+    .eq(column, value)
     .maybeSingle();
 
   if (projectError) {

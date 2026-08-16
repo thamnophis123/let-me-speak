@@ -13,6 +13,7 @@ import type { ArgumentItem, ProjectAnalysis } from "@/lib/projects/types";
 import { AddEvidenceControls } from "./add-evidence-controls";
 import { AdminAnalysisPanel } from "./admin-analysis-panel";
 import { AnalysisInstructions } from "./analysis-instructions";
+import { AskQuestion } from "./ask-question";
 import { StakeholderForm } from "./stakeholder-form";
 import {
   ArgumentStrengthBadge,
@@ -124,6 +125,8 @@ export function AnalysisBoard({ project }: { project: ProjectAnalysis }) {
             {project.version} · Last updated {project.lastUpdated}
           </p>
         </section>
+
+        <AskQuestion projectId={project.uuid} />
 
         <Separator />
 
