@@ -206,3 +206,7 @@ create policy "Public can submit comments"
   on public.submissions for insert
   to anon, authenticated
   with check (true);
+
+grant usage on schema public to anon, authenticated;
+grant select on table public.projects, public.evidence_items, public.claims, public.analysis_versions to anon, authenticated;
+grant insert on table public.submissions to anon, authenticated;

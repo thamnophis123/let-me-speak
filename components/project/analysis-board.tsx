@@ -208,7 +208,7 @@ export function AnalysisBoard({ project }: { project: ProjectAnalysis }) {
           <SectionHeading
             kicker="04 · Public input"
             title="Stakeholder input"
-            description="Offer a claim, a correction, or new evidence. This is a placeholder intake form."
+            description="Offer a claim, a correction, or new evidence. Submissions are reviewed before anything is added to the board."
           />
           <Card>
             <CardContent className="pt-1">
