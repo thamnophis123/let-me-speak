@@ -94,10 +94,13 @@ export type Database = {
       evidence_items: {
         Row: {
           created_at: string;
+          file_path: string | null;
+          file_url: string | null;
           id: string;
           project_id: string;
           sort_order: number;
           source: string;
+          source_url: string | null;
           status: Database["public"]["Enums"]["evidence_status"];
           summary: string;
           title: string;
@@ -105,10 +108,13 @@ export type Database = {
         };
         Insert: {
           created_at?: string;
+          file_path?: string | null;
+          file_url?: string | null;
           id?: string;
           project_id: string;
           sort_order?: number;
           source: string;
+          source_url?: string | null;
           status: Database["public"]["Enums"]["evidence_status"];
           summary: string;
           title: string;
@@ -116,10 +122,13 @@ export type Database = {
         };
         Update: {
           created_at?: string;
+          file_path?: string | null;
+          file_url?: string | null;
           id?: string;
           project_id?: string;
           sort_order?: number;
           source?: string;
+          source_url?: string | null;
           status?: Database["public"]["Enums"]["evidence_status"];
           summary?: string;
           title?: string;

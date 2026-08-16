@@ -5,5 +5,6 @@ grant usage on schema public to service_role;
 grant select on table public.projects, public.evidence_items, public.claims, public.analysis_versions, public.submissions to service_role;
 grant insert, update, delete on table public.claims to service_role;
 grant insert, update on table public.analysis_versions to service_role;
+grant insert, update, delete on table public.evidence_items to service_role;
 grant insert, update on table public.projects to service_role;
 grant update on table public.submissions to service_role;

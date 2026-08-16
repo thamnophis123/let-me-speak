@@ -59,6 +59,8 @@ export function mapProjectAnalysis(
         source: item.source,
         summary: item.summary,
         status: item.status,
+        sourceUrl: item.source_url,
+        fileUrl: item.file_url,
       })),
     argumentsFor: claims
       .filter((claim) => claim.side === "for")

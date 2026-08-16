@@ -103,9 +103,18 @@ create table public.evidence_items (
   source text not null,
   summary text not null,
   status public.evidence_status not null,
+  source_url text,
+  file_url text,
+  file_path text,
   sort_order integer not null default 0,
   created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
+  updated_at timestamptz not null default now(),
+  constraint evidence_source_url_http check (
+    source_url is null or source_url ~* '^https?://'
+  ),
+  constraint evidence_file_url_http check (
+    file_url is null or file_url ~* '^https?://'
+  )
 );
 
 create index evidence_items_project_id_sort_idx
@@ -213,4 +222,5 @@ grant insert on table public.submissions to anon, authenticated;
 grant select, update on table public.submissions to service_role;
 grant insert, update, delete on table public.claims to service_role;
 grant insert, update on table public.analysis_versions to service_role;
+grant insert, update, delete on table public.evidence_items to service_role;
 grant insert, update on table public.projects to service_role;

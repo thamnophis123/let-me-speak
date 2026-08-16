@@ -24,6 +24,8 @@ export type EvidenceItem = {
   source: string;
   summary: string;
   status: EvidenceStatus;
+  sourceUrl: string | null;
+  fileUrl: string | null;
 };
 
 export type ArgumentItem = {

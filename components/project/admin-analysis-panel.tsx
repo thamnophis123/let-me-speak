@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { openAddEvidenceForm } from "@/components/project/add-evidence-controls";
 import type { Enums } from "@/lib/supabase/database.types";
 
 type AdminSubmission = {
@@ -231,6 +232,14 @@ export function AdminAnalysisPanel({
         ) : null}
 
         <div className="flex flex-wrap items-center gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            disabled={busy}
+            onClick={() => openAddEvidenceForm()}
+          >
+            Add Evidence
+          </Button>
           <Button
             type="button"
             disabled={busy}

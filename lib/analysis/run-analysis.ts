@@ -155,6 +155,8 @@ function buildUserPrompt(context: AnalysisContext) {
         source: item.source,
         summary: item.summary,
         status: item.status,
+        sourceUrl: item.source_url,
+        fileUrl: item.file_url,
       })),
       null,
       2,

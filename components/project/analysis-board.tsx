@@ -10,6 +10,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import type { ArgumentItem, ProjectAnalysis } from "@/lib/projects/types";
 
+import { AddEvidenceControls } from "./add-evidence-controls";
 import { AdminAnalysisPanel } from "./admin-analysis-panel";
 import { AnalysisInstructions } from "./analysis-instructions";
 import { StakeholderForm } from "./stakeholder-form";
@@ -132,6 +133,7 @@ export function AnalysisBoard({ project }: { project: ProjectAnalysis }) {
             title="Evidence baseline"
             description="What the record currently supports, and how each item is classified."
           />
+          <AddEvidenceControls projectId={project.uuid} />
           <div className="grid gap-4 md:grid-cols-2">
             {project.evidence.length === 0 ? (
               <div className="rounded-xl border border-dashed px-6 py-12 text-sm leading-6 text-muted-foreground md:col-span-2">
@@ -147,8 +149,32 @@ export function AnalysisBoard({ project }: { project: ProjectAnalysis }) {
                     <CardDescription>{item.source}</CardDescription>
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="grid gap-3">
                   <p className="leading-6 text-muted-foreground">{item.summary}</p>
+                  {item.fileUrl || item.sourceUrl ? (
+                    <div className="flex flex-wrap gap-3 text-sm">
+                      {item.fileUrl ? (
+                        <a
+                          href={item.fileUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="font-medium underline-offset-4 hover:underline"
+                        >
+                          View file
+                        </a>
+                      ) : null}
+                      {item.sourceUrl ? (
+                        <a
+                          href={item.sourceUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="font-medium underline-offset-4 hover:underline"
+                        >
+                          Open source
+                        </a>
+                      ) : null}
+                    </div>
+                  ) : null}
                 </CardContent>
               </Card>
               ))
