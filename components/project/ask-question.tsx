@@ -38,6 +38,13 @@ export function AskQuestion({ projectId }: { projectId: string }) {
     setOpen(true);
   }
 
+  function clearAnswer() {
+    setResult(null);
+    setQuestion("");
+    setError(null);
+    setOpen(false);
+  }
+
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
@@ -137,9 +144,14 @@ export function AskQuestion({ projectId }: { projectId: string }) {
       {result ? (
         <Card>
           <CardHeader className="gap-3">
-            <p className="text-xs font-medium tracking-[0.14em] text-muted-foreground uppercase">
-              Answer
-            </p>
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <p className="text-xs font-medium tracking-[0.14em] text-muted-foreground uppercase">
+                Answer
+              </p>
+              <Button type="button" variant="outline" size="sm" onClick={clearAnswer}>
+                Clear answer
+              </Button>
+            </div>
             <CardTitle className="text-lg leading-7">{result.question}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-5">
